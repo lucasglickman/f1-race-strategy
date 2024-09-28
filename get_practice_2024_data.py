@@ -145,8 +145,13 @@ def collect_data_for_practice():
                 for lap in lap_data:
                     if lap['driver_number'] in mclaren_drivers:
                         stint = next(
-                            (s for s in stints_data if s['driver_number'] == lap['driver_number']), None)
-
+                            (s for s in stints_data 
+                             if s['driver_number'] == lap['driver_number'] and 
+                             s['lap_start'] <= lap['lap_number'] <= s['lap_end']), 
+                            None)
+                        #if stint and stint['compound'] != 'MEDIUM':
+                        #    print(f"Compound changed to {stint['compound']} for driver {lap['driver_number']} on lap {lap['lap_number']}")
+                        
                         weather = weather_data[0] if weather_data else {}
 
                         all_data.append({
