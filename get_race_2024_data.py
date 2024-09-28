@@ -12,9 +12,9 @@ def get_session_keys(grand_prix, year=2024):
 
     if response.status_code == 200:
         data = response.json()
-        # Filter sessions for Race & Quali
+        # Filter sessions for Qualifying and Race
         race_sessions = [session for session in data if session['session_name'] in [
-            'Race', 'Qualifying']]
+            'Qualifying', 'Race']]
         return {session['session_name']: (session['session_key'], session['circuit_short_name']) for session in race_sessions}
     else:
         print(
@@ -139,14 +139,19 @@ def collect_data_for_race():
             if session_name == 'Race' and not mclaren_drivers:
                 mclaren_drivers = [4, 81]
                 print(
-                    f"Falling back to known McLaren drivers for Race: {mclaren_drivers}")
+                    f"Falling back to known McLaren drivers for race: {mclaren_drivers}")
 
             if lap_data and weather_data and stints_data:
                 for lap in lap_data:
                     if lap['driver_number'] in mclaren_drivers:
                         stint = next(
-                            (s for s in stints_data if s['driver_number'] == lap['driver_number']), None)
-
+                            (s for s in stints_data 
+                             if s['driver_number'] == lap['driver_number'] and 
+                             s['lap_start'] <= lap['lap_number'] <= s['lap_end']), 
+                            None)
+                        #if stint and stint['compound'] != 'MEDIUM':
+                        #    print(f"Compound changed to {stint['compound']} for driver {lap['driver_number']} on lap {lap['lap_number']}")
+                        
                         weather = weather_data[0] if weather_data else {}
 
                         all_data.append({
@@ -175,11 +180,11 @@ def collect_data_for_race():
             else:
                 print(f"No data available for {g_p}")
 
-    with pd.ExcelWriter('mclaren_race_2024_data.xlsx') as writer:
+    with pd.ExcelWriter('mclaren_races_2024_data.xlsx') as writer:
         for gp, data in all_gp_data.items():
             data.to_excel(writer, sheet_name=gp, index=False)
 
-    print("Data saved to mclaren_race_2024_data.xlsx")
+    print("Data saved to mclaren_races_2024_data.xlsx")
     print()
 
 
