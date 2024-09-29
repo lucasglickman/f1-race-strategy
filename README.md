@@ -11,4 +11,8 @@ Update:
 - 2024-07-28:
   - get_practice_2024_data.py: Collects data for McLaren's practice sessions in 2024.
   - get_race_2024_data.py: Collects data for McLaren's race sessions in 2024.
+  - current_strategy_model.pkl: Model trained on McLaren's 2024 data.
+  - prediction.py: Predicts the tire strategy for a new practice session.
+  - current_race_practice.py: pulls data for the race of interest
+
 
