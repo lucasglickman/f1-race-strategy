@@ -196,6 +196,6 @@ United States
 
 
 grand_prix = "United States"
-shortname = "Miami"
+shortname = "Austin"
 
 collect_data_for_practice(grand_prix, shortname)
